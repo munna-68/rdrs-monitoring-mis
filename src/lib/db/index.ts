@@ -1,5 +1,5 @@
-import path from 'node:path';
 import * as schema from './schema';
+import { preparePgliteDataDir, pgliteDataDir } from './pglite-lock';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 export type Database = PostgresJsDatabase<typeof schema>;
@@ -47,9 +47,8 @@ async function createDb(): Promise<Database> {
     import('@electric-sql/pglite'),
     import('drizzle-orm/pglite'),
   ]);
-  const dataDir = process.env.PGLITE_DIR
-    ? path.resolve(process.env.PGLITE_DIR)
-    : path.join(process.cwd(), '.pglite-data');
+  const dataDir = pgliteDataDir();
+  preparePgliteDataDir(dataDir);
   const client = new PGlite(dataDir);
   await client.waitReady;
   globalForDb.__rdrsDriver = 'pglite';

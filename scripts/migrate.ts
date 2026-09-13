@@ -6,6 +6,7 @@
  * Run with:  npm run db:migrate
  */
 import path from 'node:path';
+import { preparePgliteDataDir, pgliteDataDir } from '../src/lib/db/pglite-lock';
 
 async function main() {
   const folder = path.join(process.cwd(), 'drizzle');
@@ -30,9 +31,8 @@ async function main() {
     import('drizzle-orm/pglite'),
     import('drizzle-orm/pglite/migrator'),
   ]);
-  const dataDir = process.env.PGLITE_DIR
-    ? path.resolve(process.env.PGLITE_DIR)
-    : path.join(process.cwd(), '.pglite-data');
+  const dataDir = pgliteDataDir();
+  preparePgliteDataDir(dataDir);
   console.log(`Migrating against embedded Postgres (PGlite) at ${dataDir}…`);
   const client = new PGlite(dataDir);
   await client.waitReady;
