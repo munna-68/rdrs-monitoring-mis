@@ -6,7 +6,7 @@ import { asc, sql } from 'drizzle-orm';
 import { TRACKING_SOURCE, TRACKING_HEADER_COUNT } from '@/lib/tracking-headers';
 import { CodePanel } from './code-panel';
 import { MasterPanel, type AdminActivity, type AdminProject } from './master-panel';
-import { Card, CardTitle, PageHeader } from '@/components/ui';
+import { Card, PageHeader } from '@/components/ui';
 
 export const dynamic = 'force-dynamic';
 

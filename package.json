@@ -12,6 +12,7 @@
     "extract:headers": "tsx scripts/extract-headers.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:demo": "tsx scripts/seed-demo-entries.ts",
+    "codes": "tsx scripts/list-codes.ts",
     "setup": "npm run db:migrate && npm run seed",
     "verify:export": "tsx scripts/verify-export.ts"
   },
