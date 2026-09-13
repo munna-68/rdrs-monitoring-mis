@@ -55,12 +55,11 @@ export function findHeaderRow(ws: ExcelJS.Worksheet): { rowNumber: number; colum
 
     const columns: ColumnSpec[] = [];
     for (let i = 0; i <= last; i++) {
-      const letter = ws.getColumn(i + 1).letter;
-      const dim = ws.getColumn(i + 1).width ?? ws.columnDimensions?.[letter]?.width ?? null;
+      const width = ws.getColumn(i + 1).width;
       columns.push({
         header: texts[i] ?? '',
         numFmt: fmts[i] ?? 'General',
-        width: typeof dim === 'number' ? dim : null,
+        width: typeof width === 'number' ? width : null,
       });
     }
     return { rowNumber: r, columns };
@@ -74,7 +73,7 @@ export function cellToText(v: ExcelJS.CellValue): string {
   if (typeof v === 'number' || typeof v === 'boolean') return String(v);
   if (v instanceof Date) return v.toISOString();
   if (typeof v === 'object') {
-    const o = v as Record<string, unknown>;
+    const o = v as unknown as Record<string, unknown>;
     if (typeof o.text === 'string') return o.text;            // rich text / hyperlink
     if (typeof o.result !== 'undefined') return cellToText(o.result as ExcelJS.CellValue); // formula
     if (Array.isArray(o.richText)) {
