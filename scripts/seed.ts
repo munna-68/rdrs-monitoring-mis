@@ -12,8 +12,8 @@
  * Run with:  npm run seed
  */
 import ExcelJS from 'exceljs';
-import crypto from 'node:crypto';
 import { getDb, schema } from '../src/lib/db';
+import { generateCode } from '../src/lib/codes';
 import { sql } from 'drizzle-orm';
 import {
   WORKBOOK_PATH,
@@ -108,16 +108,6 @@ function parseActivities(ws: ExcelJS.Worksheet, projectName: string): ParsedActi
     });
   }
   return out;
-}
-
-/** Readable, low-ambiguity code (no O/0/I/1) so it can be read over a phone. */
-function generateCode(role: string): string {
-  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const pick = (n: number) =>
-    Array.from(crypto.randomBytes(n))
-      .map((b) => alphabet[b % alphabet.length])
-      .join('');
-  return `${role}-${pick(4)}-${pick(4)}`;
 }
 
 const ROLE_SEED: { role: 'USER' | 'VIEW' | 'ADMIN' | 'SUPERADMIN'; label: string }[] = [

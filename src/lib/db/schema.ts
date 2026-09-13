@@ -6,6 +6,7 @@ import {
   numeric,
   timestamp,
   date,
+  boolean,
   pgEnum,
   uniqueIndex,
   index,
@@ -134,6 +135,15 @@ export const entries = pgTable('entries', {
   submittedByRole: roleEnum('submitted_by_role').notNull(),
 
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+
+  /**
+   * Marks rows created by `npm run seed:demo`. Not part of the brief's data
+   * model — added so the sample data used to demonstrate the dashboard can be
+   * identified in the UI and purged in one step (`npm run seed:demo -- --purge`)
+   * before the prototype is pointed at real submissions. Always false for
+   * anything an officer actually submits.
+   */
+  isSample: boolean('is_sample').notNull().default(false),
 
   // "Re-entry" / correction audit — last editor only, per the brief's
   // explicit scope limit (no full audit-log history this pass).

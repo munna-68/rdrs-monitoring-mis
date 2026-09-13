@@ -191,13 +191,14 @@ export default async function RecordsPage({
                       <span className="block text-[11px] text-ink-faint">{e.submittedByDesignation}</span>
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">
-                      {e.lastEditedAt ? (
-                        <Badge tone="amber">
-                          Corrected by {e.lastEditedByName ?? '—'}
-                        </Badge>
-                      ) : (
-                        <Badge tone="neutral">Submitted</Badge>
-                      )}
+                      <span className="flex flex-wrap items-center gap-1.5">
+                        {e.lastEditedAt ? (
+                          <Badge tone="amber">Corrected by {e.lastEditedByName ?? '—'}</Badge>
+                        ) : (
+                          <Badge tone="neutral">Submitted</Badge>
+                        )}
+                        {e.isSample && <Badge tone="violet">Sample</Badge>}
+                      </span>
                     </td>
                     {canEdit && (
                       <td className="px-3 py-2 whitespace-nowrap">
