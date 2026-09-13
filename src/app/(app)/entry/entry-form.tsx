@@ -1,7 +1,8 @@
 'use client';
 
 import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
-import { createEntryAction, initialEntryState } from './actions';
+import { createEntryAction } from './actions';
+import { initialEntryState } from '@/lib/action-state';
 import { BENEFICIARY_COLUMNS, type BeneficiaryKey } from '@/lib/tracking-headers';
 import { Button, Card, CardTitle, Field, Input, Notice, Select, fmtBDT, fmtInt } from '@/components/ui';
 
@@ -173,7 +174,7 @@ export function EntryForm({
                 value={activityId}
                 disabled={projectId === ''}
                 onChange={(e) => setActivityId(e.target.value === '' ? '' : Number(e.target.value))}
-                size={12}
+                size={8}
                 className="h-auto"
               >
                 <option value="">Select an activity…</option>

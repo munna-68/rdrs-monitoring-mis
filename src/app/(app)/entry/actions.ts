@@ -7,14 +7,9 @@ import { getSession } from '@/lib/auth';
 import { can } from '@/lib/roles';
 import { computeTotal, toAmount, toCount, emptyCounts, type BeneficiaryCounts } from '@/lib/entries';
 import { BENEFICIARY_COLUMNS } from '@/lib/tracking-headers';
-
-export type EntryFormState = {
-  ok: boolean;
-  error: string | null;
-  message: string | null;
-};
-
-export const initialEntryState: EntryFormState = { ok: false, error: null, message: null };
+// The state type and its initial value live in a plain module: a "use server"
+// file may only export async functions.
+import type { EntryFormState } from '@/lib/action-state';
 
 export async function createEntryAction(
   _prev: EntryFormState,

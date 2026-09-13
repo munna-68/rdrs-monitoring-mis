@@ -1,7 +1,8 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { regenerateAllCodesAction, regenerateCodeAction, initialAdminState } from './actions';
+import { regenerateAllCodesAction, regenerateCodeAction } from './actions';
+import { initialAdminState } from '@/lib/action-state';
 import { ROLES, ROLE_LABELS, ROLE_DESCRIPTIONS, type Role } from '@/lib/roles';
 import { Button, Card, CardTitle, Notice, fmtDateTime } from '@/components/ui';
 

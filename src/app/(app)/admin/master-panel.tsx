@@ -2,8 +2,9 @@
 
 import { useActionState, useMemo, useState } from 'react';
 import {
-  createActivityAction, createProjectAction, updateActivityAction, initialAdminState,
+  createActivityAction, createProjectAction, updateActivityAction,
 } from './actions';
+import { initialAdminState } from '@/lib/action-state';
 import { Button, Card, CardTitle, Field, Input, Notice, Select, fmtBDT, fmtInt } from '@/components/ui';
 
 export type AdminProject = { id: number; name: string; code: string };

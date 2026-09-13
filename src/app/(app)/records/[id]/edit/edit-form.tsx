@@ -1,7 +1,8 @@
 'use client';
 
 import { useActionState, useMemo, useState } from 'react';
-import { updateEntryAction, initialEditState } from '../../actions';
+import { updateEntryAction } from '../../actions';
+import { initialEditState } from '@/lib/action-state';
 import { BENEFICIARY_COLUMNS, type BeneficiaryKey } from '@/lib/tracking-headers';
 import { Button, Card, CardTitle, Field, Input, Notice, fmtInt } from '@/components/ui';
 

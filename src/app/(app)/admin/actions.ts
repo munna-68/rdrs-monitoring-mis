@@ -6,9 +6,9 @@ import { eq } from 'drizzle-orm';
 import { getSession } from '@/lib/auth';
 import { can, isRole } from '@/lib/roles';
 import { generateCode } from '@/lib/codes';
-
-export type AdminState = { ok: boolean; error: string | null; message: string | null };
-export const initialAdminState: AdminState = { ok: false, error: null, message: null };
+// A "use server" file may only export async functions, so the state type and
+// its initial value live in a plain module.
+import type { AdminState } from '@/lib/action-state';
 
 async function requireSuperadmin(): Promise<AdminState | null> {
   const session = await getSession();

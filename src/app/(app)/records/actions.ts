@@ -8,9 +8,9 @@ import { getSession } from '@/lib/auth';
 import { can } from '@/lib/roles';
 import { computeTotal, toAmount, toCount, emptyCounts } from '@/lib/entries';
 import { BENEFICIARY_COLUMNS } from '@/lib/tracking-headers';
-
-export type EditFormState = { ok: boolean; error: string | null; message: string | null };
-export const initialEditState: EditFormState = { ok: false, error: null, message: null };
+// A "use server" file may only export async functions, so the state type and
+// its initial value live in a plain module.
+import type { EditFormState } from '@/lib/action-state';
 
 /**
  * The "re-entry" path from the meeting notes: an Admin corrects an entry that
