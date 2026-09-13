@@ -12,7 +12,7 @@
  * Generation is deterministic (seeded PRNG), so re-running produces the same
  * figures and screenshots stay reproducible.
  */
-import { getDb, schema } from '../src/lib/db';
+import { closeDb, getDb, schema } from '../src/lib/db';
 import { eq, asc } from 'drizzle-orm';
 
 const PURGE_ONLY = process.argv.includes('--purge');
@@ -149,7 +149,10 @@ async function main() {
   console.log('All rows have is_sample = true. Remove with: npm run seed:demo -- --purge');
 }
 
-main().catch((e) => {
-  console.error('\nDemo seed failed:\n', e);
-  process.exit(1);
-});
+main()
+  .then(async () => { await closeDb(); })
+  .catch(async (e) => {
+    console.error('\nDemo seed failed:\n', e);
+    await closeDb().catch(() => {});
+    process.exit(1);
+  });

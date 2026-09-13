@@ -26,6 +26,7 @@ export type DbDriver = 'postgres-js' | 'pglite';
 const globalForDb = globalThis as unknown as {
   __rdrsDbPromise?: Promise<Database>;
   __rdrsDriver?: DbDriver;
+  __rdrsClose?: () => Promise<void>;
 };
 
 async function createDb(): Promise<Database> {
@@ -40,6 +41,7 @@ async function createDb(): Promise<Database> {
     // connection string, which cannot support server-side prepared statements.
     const client = postgres(url, { max: 5, prepare: false });
     globalForDb.__rdrsDriver = 'postgres-js';
+    globalForDb.__rdrsClose = async () => { await client.end(); };
     return drizzle(client, { schema });
   }
 
@@ -52,6 +54,7 @@ async function createDb(): Promise<Database> {
   const client = new PGlite(dataDir);
   await client.waitReady;
   globalForDb.__rdrsDriver = 'pglite';
+  globalForDb.__rdrsClose = async () => { await client.close(); };
   // PGlite's Drizzle instance is structurally identical to the postgres-js
   // one for every query we issue; the cast just unifies the nominal type.
   return drizzle(client, { schema }) as unknown as Database;
@@ -62,6 +65,22 @@ export function getDb(): Promise<Database> {
     globalForDb.__rdrsDbPromise = createDb();
   }
   return globalForDb.__rdrsDbPromise;
+}
+
+/**
+ * Releases the connection.
+ *
+ * Needed by CLI scripts: PGlite runs Postgres on a WebAssembly worker that keeps
+ * the Node event loop alive, so a script that finishes its work still hangs
+ * instead of exiting — and, worse, leaves the ownership lock behind for the next
+ * run to trip over. The Next.js server never calls this; it holds the connection
+ * for the lifetime of the process.
+ */
+export async function closeDb(): Promise<void> {
+  const close = globalForDb.__rdrsClose;
+  globalForDb.__rdrsDbPromise = undefined;
+  globalForDb.__rdrsClose = undefined;
+  if (close) await close();
 }
 
 export function getDbInfo(): { driver: DbDriver; target: string } {

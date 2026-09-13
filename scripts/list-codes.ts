@@ -4,7 +4,7 @@
  *
  * Run with:  npm run codes
  */
-import { getDb, schema } from '../src/lib/db';
+import { closeDb, getDb, schema } from '../src/lib/db';
 import { asc } from 'drizzle-orm';
 
 async function main() {
@@ -30,7 +30,10 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+main()
+  .then(async () => { await closeDb(); })
+  .catch(async (e) => {
+    console.error(e);
+    await closeDb().catch(() => {});
+    process.exit(1);
+  });

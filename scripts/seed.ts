@@ -12,7 +12,7 @@
  * Run with:  npm run seed
  */
 import ExcelJS from 'exceljs';
-import { getDb, schema } from '../src/lib/db';
+import { closeDb, getDb, schema } from '../src/lib/db';
 import { generateCode } from '../src/lib/codes';
 import { sql } from 'drizzle-orm';
 import {
@@ -209,7 +209,10 @@ async function main() {
   console.log('');
 }
 
-main().catch((e) => {
-  console.error('\nSeed failed:\n', e);
-  process.exit(1);
-});
+main()
+  .then(async () => { await closeDb(); })
+  .catch(async (e) => {
+    console.error('\nSeed failed:\n', e);
+    await closeDb().catch(() => {});
+    process.exit(1);
+  });
