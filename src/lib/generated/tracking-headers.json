@@ -1,37 +1,161 @@
 {
   "sourceSheet": "Tracking",
   "sourceRow": 3,
-  "headers": [
-    "Date",
-    "Month",
-    "Year",
-    "Project",
-    "Activity Code",
-    "sl",
-    "Project Name ",
-    "Project Activities",
-    "Unit Type",
-    "Intervention",
-    "Activity Type",
-    "Unit Rate (BDT)",
-    "Project Target",
-    "Project Budget (BDT)",
-    "Annual Target ",
-    "Annual Budget (BDT) (July 2023-June 2024)",
-    "Last Quarter Target",
-    "Last Quarter Achievement",
-    "Varience",
-    "Budget",
-    "Actual Expenditure",
-    "Female (above 26 years)",
-    "Male (above 26 years)",
-    "PWDs (above 26 years)",
-    "Youth Female (15 - 25 years)",
-    "Youth Male (15 - 25 years)",
-    "Youth PWDs (15 - 25 years)",
-    "Girl (0 - 14 years)",
-    "Boy (0 - 14 years)",
-    "PWDs (0 - 14 years)",
-    "Total"
+  "columns": [
+    {
+      "header": "Date",
+      "numFmt": "dd/mm/yyyy",
+      "width": 13.7109375
+    },
+    {
+      "header": "Month",
+      "numFmt": "##,##0",
+      "width": 11.42578125
+    },
+    {
+      "header": "Year",
+      "numFmt": "####0",
+      "width": 9.85546875
+    },
+    {
+      "header": "Project",
+      "numFmt": "General",
+      "width": 10.7109375
+    },
+    {
+      "header": "Activity Code",
+      "numFmt": "##,##0",
+      "width": 10.42578125
+    },
+    {
+      "header": "sl",
+      "numFmt": "##,##0",
+      "width": 7.7109375
+    },
+    {
+      "header": "Project Name ",
+      "numFmt": "##,##0",
+      "width": 19.28515625
+    },
+    {
+      "header": "Project Activities",
+      "numFmt": "General",
+      "width": 52.42578125
+    },
+    {
+      "header": "Unit Type",
+      "numFmt": "General",
+      "width": 17.7109375
+    },
+    {
+      "header": "Intervention",
+      "numFmt": "General",
+      "width": 19.7109375
+    },
+    {
+      "header": "Activity Type",
+      "numFmt": "General",
+      "width": null
+    },
+    {
+      "header": "Unit Rate (BDT)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Project Target",
+      "numFmt": "General",
+      "width": null
+    },
+    {
+      "header": "Project Budget (BDT)",
+      "numFmt": "General",
+      "width": null
+    },
+    {
+      "header": "Annual Target ",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Annual Budget (BDT) (July 2023-June 2024)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Last Quarter Target",
+      "numFmt": "##,##0",
+      "width": 16.28515625
+    },
+    {
+      "header": "Last Quarter Achievement",
+      "numFmt": "##,##0",
+      "width": 15.42578125
+    },
+    {
+      "header": "Varience",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Budget",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Actual Expenditure",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Female (above 26 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Male (above 26 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "PWDs (above 26 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Youth Female (15 - 25 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Youth Male (15 - 25 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Youth PWDs (15 - 25 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Girl (0 - 14 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Boy (0 - 14 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "PWDs (0 - 14 years)",
+      "numFmt": "##,##0",
+      "width": null
+    },
+    {
+      "header": "Total",
+      "numFmt": "##,##0",
+      "width": null
+    }
   ]
 }

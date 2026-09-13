@@ -1,6 +1,7 @@
 /**
- * Extracts the "Tracking" sheet's header row from the source workbook and
- * writes it to src/lib/generated/tracking-headers.json.
+ * Extracts the "Tracking" sheet's header row — plus each column's number format
+ * and width — from the source workbook, and writes them to
+ * src/lib/generated/tracking-headers.json.
  *
  * WHY THIS EXISTS
  * The brief is explicit: the Tracking sheet's header row "is the exact column
@@ -12,7 +13,8 @@
  * commit the result. The export then consumes that generated file, which means
  * the exported header row is byte-identical to the source — including the
  * inconsistent spelling ("Varience") and the trailing spaces in
- * "Project Name " and "Annual Target ".
+ * "Project Name " and "Annual Target ". Number formats and column widths come
+ * along too, so the export also *looks* like the sheet it replaces.
  *
  * Re-run with:  npm run extract:headers
  */
@@ -26,22 +28,42 @@ export const HEADERS_OUT = path.join(
   'src', 'lib', 'generated', 'tracking-headers.json',
 );
 
+export type ColumnSpec = {
+  header: string;
+  numFmt: string;
+  width: number | null;
+};
+
 /** Locate the Tracking header row by content, not by a hard-coded row number. */
-export function findHeaderRow(ws: ExcelJS.Worksheet): { rowNumber: number; headers: string[] } {
+export function findHeaderRow(ws: ExcelJS.Worksheet): { rowNumber: number; columns: ColumnSpec[] } {
   for (let r = 1; r <= Math.min(ws.rowCount, 20); r++) {
     const row = ws.getRow(r);
-    const values: string[] = [];
+    const texts: string[] = [];
+    const fmts: string[] = [];
     row.eachCell({ includeEmpty: true }, (cell, col) => {
-      values[col - 1] = cellToText(cell.value);
+      texts[col - 1] = cellToText(cell.value);
+      fmts[col - 1] = cell.numFmt ?? 'General';
     });
-    const hasDate = values[0] === 'Date';
-    const hasTotal = values.includes('Total');
-    if (hasDate && hasTotal) {
-      // Trim trailing blanks that are formatting artefacts, not real columns.
-      let last = values.length - 1;
-      while (last >= 0 && (values[last] ?? '') === '') last--;
-      return { rowNumber: r, headers: values.slice(0, last + 1) };
+
+    const hasDate = texts[0] === 'Date';
+    const hasTotal = texts.includes('Total');
+    if (!hasDate || !hasTotal) continue;
+
+    // Trim trailing blanks that are formatting artefacts, not real columns.
+    let last = texts.length - 1;
+    while (last >= 0 && (texts[last] ?? '') === '') last--;
+
+    const columns: ColumnSpec[] = [];
+    for (let i = 0; i <= last; i++) {
+      const letter = ws.getColumn(i + 1).letter;
+      const dim = ws.getColumn(i + 1).width ?? ws.columnDimensions?.[letter]?.width ?? null;
+      columns.push({
+        header: texts[i] ?? '',
+        numFmt: fmts[i] ?? 'General',
+        width: typeof dim === 'number' ? dim : null,
+      });
     }
+    return { rowNumber: r, columns };
   }
   throw new Error('Could not locate a Tracking header row (expected "Date" in col A and "Total").');
 }
@@ -79,27 +101,37 @@ export function cellToDate(v: ExcelJS.CellValue): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-export async function extractHeaders(): Promise<string[]> {
+export async function extractHeaders(): Promise<ColumnSpec[]> {
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.readFile(WORKBOOK_PATH);
   const ws = wb.getWorksheet('Tracking');
   if (!ws) throw new Error('Workbook has no "Tracking" sheet.');
-  const { rowNumber, headers } = findHeaderRow(ws);
+  const { rowNumber, columns } = findHeaderRow(ws);
   fs.mkdirSync(path.dirname(HEADERS_OUT), { recursive: true });
   fs.writeFileSync(
     HEADERS_OUT,
-    JSON.stringify({ sourceSheet: 'Tracking', sourceRow: rowNumber, headers }, null, 2) + '\n',
+    JSON.stringify(
+      { sourceSheet: 'Tracking', sourceRow: rowNumber, columns },
+      null,
+      2,
+    ) + '\n',
     'utf8',
   );
-  return headers;
+  return columns;
 }
 
 if (process.argv[1] && process.argv[1].endsWith('extract-headers.ts')) {
-  extractHeaders().then((h) => {
-    console.log(`Extracted ${h.length} Tracking headers -> ${path.relative(process.cwd(), HEADERS_OUT)}`);
-    h.forEach((x, i) => console.log(`  ${String(i + 1).padStart(2)}. ${JSON.stringify(x)}`));
-  }).catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
+  extractHeaders()
+    .then((cols) => {
+      console.log(`Extracted ${cols.length} Tracking columns -> ${path.relative(process.cwd(), HEADERS_OUT)}`);
+      cols.forEach((c, i) =>
+        console.log(
+          `  ${String(i + 1).padStart(2)}. ${JSON.stringify(c.header).padEnd(40)} fmt=${JSON.stringify(c.numFmt).padEnd(12)} w=${c.width ?? '-'}`,
+        ),
+      );
+    })
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    });
 }

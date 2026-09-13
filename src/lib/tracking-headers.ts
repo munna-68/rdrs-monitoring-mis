@@ -13,7 +13,14 @@ import generated from './generated/tracking-headers.json';
  * into the existing consolidation workflow, and a renamed column would break
  * the downstream formulas that read this sheet.
  */
-export const TRACKING_HEADERS: readonly string[] = generated.headers;
+export type TrackingColumnSpec = {
+  header: string;
+  numFmt: string;
+  width: number | null;
+};
+
+export const TRACKING_COLUMNS: readonly TrackingColumnSpec[] = generated.columns;
+export const TRACKING_HEADERS: readonly string[] = TRACKING_COLUMNS.map((c) => c.header);
 export const TRACKING_HEADER_COUNT = TRACKING_HEADERS.length;
 export const TRACKING_SOURCE = {
   sheet: generated.sourceSheet,
